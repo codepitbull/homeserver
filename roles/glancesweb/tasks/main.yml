@@ -1,0 +1,11 @@
+---
+- name: create glancesweb
+  template: src=glancesweb dest=/etc/systemd/system/glancesweb.service
+  register: install_config
+
+- name: notify systemd of config changes
+  command: systemctl daemon-reload
+  when: install_config.changed == True
+
+- name: start glancesweb and set to start on startup
+  service: name=glancesweb state=started enabled=yes

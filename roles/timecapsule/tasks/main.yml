@@ -1,0 +1,28 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: Install netatalk 
+  apt: name=netatalk state=present
+
+- name: Install libc6-dev 
+  apt: name=libc6-dev state=present
+
+- name: Install avahi-daemon 
+  apt: name=avahi-daemon state=present
+
+- name: Install libnss-mdns 
+  apt: name=libnss-mdns state=present
+
+- lineinfile: dest=/etc/netatalk/AppleVolumes.default regexp='~/.*Home Directory.$' state=absent 
+
+- group: name=jochen state=present
+- user: name=jochen comment="Jochen" group=jochen state=present
+- file: path=/core/timemachine_jochen/ owner=jochen group=jochen mode=0744
+- lineinfile: dest=/etc/netatalk/AppleVolumes.default line='/core/timemachine_jochen "timemachine_jochen"  cnidscheme:dbd options:usedots,upriv,tm volsizelimit:600000 allow:jochen'
+
+- group: name=moni state=present
+- user: name=moni comment="Moni" group=moni state=present
+- file: path=/core/timemachine_moni/ owner=moni group=moni mode=0744
+- lineinfile: dest=/etc/netatalk/AppleVolumes.default line='/core/timemachine_moni "timemachine_moni"  cnidscheme:dbd options:usedots,upriv,tm volsizelimit:600000 allow:moni'
+
+- service: name=netatalk state=restarted

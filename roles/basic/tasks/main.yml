@@ -1,0 +1,21 @@
+---
+- name: add cdrecord-ppa
+  apt_repository: repo='ppa:brandonsnider/cdrtools'
+
+- name: install cdrecord
+  apt: name=cdrecord state=present update_cache=yes
+
+- name: install udftools
+  apt: name=udftools state=present update_cache=yes
+
+- name: install smartmontools
+  apt: name=smartmontools state=present update_cache=yes
+
+- name: enable smartd
+  lineinfile: dest=/etc/default/smartmontools regex=^#start_smartd=yes line=start_smartd=yes
+
+- name: remove smartd-mail-line
+  lineinfile: dest=/etc/smartd.conf regexp=^DEVICESCAN state=absent
+
+- name: add smartd-mail-line
+  lineinfile: dest=/etc/smartd.conf line="DEVICESCAN -d removable -n standby -m {{mail_user}} -M exec /usr/share/smartmontools/smartd-runner"

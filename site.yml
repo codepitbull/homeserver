@@ -1,0 +1,14 @@
+---
+# This playbook deploys the whole application stack in this site.  
+
+- name: become timecapsule
+  hosts: nas
+  become: true
+
+  roles:
+    - basic
+    - mailalarm
+    - timecapsule
+    - plex
+    - syncthing
+    - glancesweb

@@ -1,0 +1,32 @@
+---
+- name: install ssmtp
+  apt: name=ssmtp state=present update_cache=yes
+
+- name: remove root-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf regexp=^root=postmaster state=absent
+- name: remove mailhub-line 
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf regexp=^mailhub= state=absent
+- name: remove hostname-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf regexp=^hostname= state=absent
+- name: remove AuthUser-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=AuthUser= state=absent
+- name: remove AuthPass-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=AuthPass= state=absent
+
+- name: add root-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=root={{mail_user}}
+- name: add mailhub-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=mailhub=smtp.gmail.com:587
+- name: add hostname-line
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=hostname=freenas
+- name: add UseSTARTTLS
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line="UseSTARTTLS=YES"
+- name: add AuthUser
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=AuthUser={{mail_user}}
+- name: add AuthPass
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line=AuthPass={{mail_password}}
+- name: add FromLineOverride
+  lineinfile: dest=/etc/ssmtp/ssmtp.conf line="FromLineOverride=YES"
+
+- lineinfile: dest=/etc/ssmtp/revaliases regexp=^root state=absent
+- lineinfile: dest=/etc/ssmtp/revaliases line=root:{{mail_user}}:smtp.gmail.com:587
