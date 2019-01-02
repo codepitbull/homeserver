@@ -1,20 +1,12 @@
 ---
 
 - group: name=syncthing state=present
-- user: name=syncthing comment="Syncthing" group=syncthing state=present createhome=no home=/core/syncthing
-- file: path=/core/syncthing/ owner=syncthing group=syncthing mode=0744
+- user: name=syncthing comment="Syncthing" group=syncthing state=present createhome=no home=/data/syncthing
+- file: path=/data/syncthing/ owner=syncthing group=syncthing mode=0744
 
 - apt_key: url=https://syncthing.net/release-key.txt state=present
 - apt_repository: repo='deb http://apt.syncthing.net/ syncthing release' state=present
 - apt: name=syncthing update_cache=yes state=present
 
-- name: create syncthing starter
-  template: src=syncthing.service dest=/etc/systemd/system/syncthing.service
-  register: install_config
-
-- name: notify systemd of config changes
-  command: systemctl daemon-reload
-  when: install_config.changed == True
-
 - name: start syncthing and set to start on startup
-  service: name=syncthing state=started enabled=yes
+  service: name=syncthing@syncthing.service state=started enabled=yes

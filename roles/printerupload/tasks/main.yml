@@ -1,0 +1,11 @@
+---
+
+- apt: name=vsftpd update_cache=yes state=present
+
+- file: path=/var/ftp/pub/ owner=nobody group=nogroup mode=0744 state=directory
+
+- file: path=/var/ftp/pub/incoming/ owner=ftp group=ftp mode=0744 state=directory
+
+- template: src=vsftpd.conf dest=/etc/vsftpd.conf
+
+- service: name=vsftpd state=restarted

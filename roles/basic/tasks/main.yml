@@ -5,6 +5,9 @@
 - name: install cdrecord
   apt: name=cdrecord state=present update_cache=yes
 
+- name: install  genisoimage
+  apt: name= genisoimage state=present update_cache=yes
+
 - name: install udftools
   apt: name=udftools state=present update_cache=yes
 

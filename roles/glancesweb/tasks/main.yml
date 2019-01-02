@@ -1,4 +1,7 @@
 ---
+- name: install glances
+  apt: name=glances state=present update_cache=yes
+
 - name: create glancesweb
   template: src=glancesweb dest=/etc/systemd/system/glancesweb.service
   register: install_config
